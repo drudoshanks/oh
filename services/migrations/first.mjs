@@ -17,16 +17,25 @@ export async function up(db) {
     .addColumn("email", "text")
     .addColumn("address_line_1", "text")
     .addColumn("address_line_2", "text")
+    .addColumn("city", "text")
+    .addColumn("state", "text")
+    .addColumn("country", "text")
+    .addColumn("zip", "text")
     .execute();
 
-    // phone
-    // email
-    // address_line_1
-    // address_line_2
-    // {geo}.city
-    // {geo}.state
-    // {geo}.country
-    // {geo}.zip
+
+  // await db.schema
+  //   .createTable("org_contacts")
+  //   .addColumn("phone", "integer", col => col.primaryKey())
+  //   .addColumn("email", "text")
+  //   .addColumn("address_line_1", "text")
+  //   .addColumn("address_line_2", "text")
+  //   .addColumn("city", "text")
+  //   .addColumn("state", "text")
+  //   .addColumn("country", "text")
+  //   .addColumn("zip", "text")
+  //   .execute();
+
 }
 
 /**
