@@ -28,7 +28,7 @@ export async function up(db) {
     .createTable("hospitalOrgMaster")
     .addColumn("org_id", "integer", col => col.primaryKey())
     .addColumn("contact_id", "integer") // contactMaster foreign key contact_id
-    .addForeignKeyConstraint('foreign_key', ['contact_id'], 'contactsMaster', ['contact_id'])
+    .addForeignKeyConstraint('foreign_key_contact_id', ['contact_id'], 'contactsMaster', ['contact_id'])
     .execute();
 
   // hospital branch master
@@ -37,18 +37,18 @@ export async function up(db) {
     .addColumn("branch_id", "integer", col => col.primaryKey())
     .addColumn("parent_org_id", "integer") // hospitalOrg foreign key org_id
     .addColumn("contact_id", "integer") // contactMaster foreign key contact_id
-    .addForeignKeyConstraint('foreign_key', ['parent_org_id'], 'hospitalOrgMaster', ['org_id'])
-    .addForeignKeyConstraint('foreign_key', ['contact_id'], 'contactsMaster', ['contact_id'])
+    .addForeignKeyConstraint('foreign_key_parent_org_id', ['parent_org_id'], 'hospitalOrgMaster', ['org_id'])
+    .addForeignKeyConstraint('foreign_key_contact_id', ['contact_id'], 'contactsMaster', ['contact_id'])
     .execute();
 
   // patient master
   await db.schema
     .createTable("patientMaster")
     .addColumn("patient_id", "integer", col => col.primaryKey())
-    .addColumn("branch_id", "text") // hospital branch foreign key branch_id
+    .addColumn("branch_id", "integer") // hospital branch foreign key branch_id
     .addColumn("contact_id", "integer") // contactMaster foreign key contact_id
-    .addForeignKeyConstraint('foreign_key', ['branch_id'], 'hospitalBranchMaster', ['branch_id'])
-    .addForeignKeyConstraint('foreign_key', ['contact_id'], 'contactsMaster', ['contact_id'])
+    .addForeignKeyConstraint('foreign_key_branch_id', ['branch_id'], 'hospitalBranchMaster', ['branch_id'])
+    .addForeignKeyConstraint('foreign_key_contact_id', ['contact_id'], 'contactsMaster', ['contact_id'])
     .execute();
 
   // tax master
@@ -76,9 +76,9 @@ export async function up(db) {
     .addColumn("patient_id", "integer") // patientMaster foreign key patient_id
     .addColumn("branch_id", "integer") // hospital branch foreign key branch_id
     .addColumn("tax_id", "integer") // taxesMaster foreign key tax_id
-    .addForeignKeyConstraint('foreign_key', ['patient_id'], 'patientMaster', ['patient_id'])
-    .addForeignKeyConstraint('foreign_key', ['branch_id'], 'hospitalBranchMaster', ['branch_id'])
-    .addForeignKeyConstraint('foreign_key', ['contact_id'], 'contactsMaster', ['contact_id'])
+    .addForeignKeyConstraint('foreign_key_patient_id', ['patient_id'], 'patientMaster', ['patient_id'])
+    .addForeignKeyConstraint('foreign_key_branch_id', ['branch_id'], 'hospitalBranchMaster', ['branch_id'])
+    .addForeignKeyConstraint('foreign_key_tax_id', ['tax_id'], 'taxesMaster', ['tax_id'])
     .addColumn("invoice_amount", "integer")
     .addColumn("invoice_description", "text")
     .execute();
@@ -89,8 +89,8 @@ export async function up(db) {
     .addColumn("invoice_transaction_id", "integer", col => col.primaryKey())
     .addColumn("invoice_id", "integer") // invoice master foreign key invoice_id
     .addColumn("line_id", "integer") // line master foreign key line_id
-    .addForeignKeyConstraint('foreign_key', ['invoice_id'], 'invoiceMaster', ['invoice_id'])
-    .addForeignKeyConstraint('foreign_key', ['line_id'], 'lineItemsMaster', ['line_item_id'])
+    .addForeignKeyConstraint('foreign_key_invoice_id', ['invoice_id'], 'invoiceMaster', ['invoice_id'])
+    .addForeignKeyConstraint('foreign_key_line_id', ['line_id'], 'lineItemsMaster', ['line_item_id'])
     .execute();
 }
 
