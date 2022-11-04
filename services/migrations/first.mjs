@@ -92,6 +92,10 @@ export async function up(db) {
     .addForeignKeyConstraint('foreign_key_invoice_id', ['invoice_id'], 'invoiceMaster', ['invoice_id'])
     .addForeignKeyConstraint('foreign_key_line_id', ['line_id'], 'lineItemsMaster', ['line_item_id'])
     .execute();
+
+  // payment request
+
+  // transaction info
 }
 
 /**
