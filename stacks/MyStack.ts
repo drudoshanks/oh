@@ -23,9 +23,14 @@ export function MyStack({ stack }: StackContext) {
       },
     },
     routes: {
-      "POST /": "functions/lambda.handler",
+      "GET /invoice/{id}": "functions/invoice.handler",
+      "GET /patient/{id}": "functions/patient.handler",
+      "GET /payment/{id}": "functions/payment.handler",
     },
   });
+
+  console.log(api.url);
+  
 
   // Show the resource info in the output
   stack.addOutputs({
