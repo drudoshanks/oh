@@ -26,6 +26,7 @@ export function MyStack({ stack }: StackContext) {
       "GET /invoice/{id}": "functions/invoice.handler",
       "GET /patient/{id}": "functions/patient.handler",
       "GET /payment/{id}": "functions/payment.handler",
+      "GET /notification": "functions/notification.handler",
     },
   });
 

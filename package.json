@@ -15,7 +15,7 @@
     "@serverless-stack/cli": "^1.15.16",
     "@serverless-stack/resources": "^1.15.16",
     "@tsconfig/node16": "^1.0.3",
-    "aws-cdk-lib": "2.39.1",
+    "aws-cdk-lib": "2.50.0",
     "typescript": "^4.8.4",
     "vitest": "^0.24.3"
   },
@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "kysely": "^0.22.0",
-    "kysely-data-api": "^0.1.4"
+    "kysely-data-api": "^0.1.4",
+    "node-fetch": "^3.3.0"
   }
 }
