@@ -9,7 +9,7 @@ export async function up(db) {
   await db.schema
     .createTable("parentOrgInfo")
     .addColumn("parent_org_id", "integer", col => col.primaryKey())
-    .addColumn("phone", "integer", (col) => col.notNull().unique())
+    .addColumn("phone", "varchar(255)", (col) => col.notNull().unique())
     .addColumn("email", "text", (col) => col.notNull().unique())
     .addColumn("email2", "text")
     .addColumn("email3", "text")
@@ -29,7 +29,7 @@ export async function up(db) {
     .createTable("hospitalOrgInfo")
     .addColumn("org_id", "integer", col => col.primaryKey())
     .addColumn("parent_org_id", "integer") // hospitalOrg foreign key org_id
-    .addColumn("phone", "integer", (col) => col.notNull().unique())
+    .addColumn("phone", "varchar(255)", (col) => col.notNull().unique())
     .addColumn("email", "text", (col) => col.notNull().unique())
     .addColumn("email2", "text")
     .addColumn("email3", "text")
@@ -50,7 +50,7 @@ export async function up(db) {
     .createTable("hospitalBranchInfo")
     .addColumn("branch_id", "integer", col => col.primaryKey())
     .addColumn("hospital_org_id", "integer") // hospitalOrg foreign key org_id
-    .addColumn("phone", "integer", (col) => col.notNull().unique())
+    .addColumn("phone", "varchar(255)", (col) => col.notNull().unique())
     .addColumn("email", "text", (col) => col.notNull().unique())
     .addColumn("email2", "text")
     .addColumn("email3", "text")
@@ -72,7 +72,7 @@ export async function up(db) {
         .createTable("billerInfo")
         .addColumn("biller_id", "integer", col => col.primaryKey())
         .addColumn("branch_id", "integer") // hospitalOrg foreign key org_id
-        .addColumn("phone", "integer", (col) => col.notNull().unique())
+        .addColumn("phone", "varchar(255)", (col) => col.notNull().unique())
         .addColumn("email", "text", (col) => col.notNull().unique())
         .addColumn("biller_first_name",'varchar(255)')
         .addColumn("biller_last_name",'varchar(255)')
@@ -85,7 +85,7 @@ export async function up(db) {
     .createTable("patientInfo")
     .addColumn("patient_id", "integer", col => col.primaryKey())
     .addColumn("biller_id", "integer") // biller foreign key branch_id
-    .addColumn("phone", "integer", (col) => col.notNull().unique())
+    .addColumn("phone", "varchar(255)", (col) => col.notNull().unique())
     .addColumn("email", "text", (col) => col.notNull().unique())
     .addColumn("name",'varchar(255)', (col) => col.notNull().unique())
     .addColumn("last_name",'varchar(255)')
