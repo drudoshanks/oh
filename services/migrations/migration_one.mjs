@@ -143,7 +143,7 @@ export async function up(db) {
     .addColumn("invoice_tax_id", "integer", col => col.primaryKey())
     .addColumn("invoice_id", "integer") // invoice master foreign key invoice_id
     .addColumn("tax_id", "integer") // line master foreign key line_id
-    .addForeignKeyConstraint('foreign_key_invoice_id', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
+    .addForeignKeyConstraint('foreign_key_invoice_id_invoiceTaxTransaction', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
     .addForeignKeyConstraint('foreign_key_tax_id', ['tax_id'], 'taxeInfo', ['tax_id'])
     .execute();
 
@@ -153,7 +153,7 @@ export async function up(db) {
     .addColumn("invoice_discount_id", "integer", col => col.primaryKey())
     .addColumn("invoice_id", "integer") // invoice master foreign key invoice_id
     .addColumn("discount_id", "integer") // line master foreign key line_id
-    .addForeignKeyConstraint('foreign_key_invoice_id', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
+    .addForeignKeyConstraint('foreign_key_invoice_id_invoiceDiscountTransaction', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
     .addForeignKeyConstraint('foreign_key_discount_id', ['discount_id'], 'discountInfo', ['discount_id'])
     .execute();
 
@@ -162,17 +162,10 @@ export async function up(db) {
     .createTable("invoiceLineTransaction")
     .addColumn("invoice_transaction_id", "integer", col => col.primaryKey())
     .addColumn("invoice_id", "integer") // invoice master foreign key invoice_id
-    .addColumn("line_id", "integer") // line master foreign key line_id
-    .addForeignKeyConstraint('foreign_key_invoice_id', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
-    .addForeignKeyConstraint('foreign_key_line_id', ['line_id'], 'lineItemsInfo', ['line_item_id'])
+    .addColumn("line_item_id", "integer") // line master foreign key line_id
+    .addForeignKeyConstraint('foreign_key_invoice_id_invoiceLineTransaction', ['invoice_id'], 'invoiceInfo', ['invoice_id'])
+    .addForeignKeyConstraint('foreign_key_line_id', ['line_item_id'], 'lineItemsInfo', ['line_item_id'])
     .execute();
-
-  // status
-  // await db.schema
-  //   .createTable("statusInfo")
-  //   .addColumn("sid", "integer", col => col.primaryKey())
-  //   .addColumn("sname", "text")
-  //   .execute();
 
   // payment request
   await db.schema
