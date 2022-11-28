@@ -4,15 +4,15 @@ import { DataApiDialect } from "kysely-data-api";
 import fetch from "node-fetch";
 
 interface Database {
-  invoiceMaster: {
+  invoiceInfo: {
     invoice_id: number;
     prid: number;
     sid: number;
   };
-  patientMaster: {
+  patientInfo: {
     patient_id: number;
   };
-  contactsMaster: {
+  parentOrgInfo: {
     contact_id: number;
   };
   paymentRequest: {
@@ -35,17 +35,12 @@ const db = new Kysely<Database>({
 export async function handler(event: any) {
   const { invoiceId, patientId, paymentId } = event.queryStringParameters;
   const record = await db
-    .selectFrom("patientMaster")
+    .selectFrom("patientInfo")
     .selectAll()
     .where("patient_id", "=", parseInt(patientId))
     .executeTakeFirst();
-  const contact = await db
-    .selectFrom("contactsMaster")
-    .selectAll()
-    .where("contact_id", "=", parseInt(record?.contact_id))
-    .executeTakeFirst();
   const link = `www.abc.com?paymentId=${paymentId}&patientId=${patientId}&invoiceId=${invoiceId}.`
-  const body = `channel=whatsapp&source=917834811114&destination=${contact?.phone}&message={"type":"text","text":"Your Payment is pending. Please complete it by clicking on ${link}"}&src.name=onehealth`;
+  const body = `channel=whatsapp&source=917834811114&destination=${record?.phone}&message={"type":"text","text":"Your Payment is pending. Please complete it by clicking on ${link}"}&src.name=onehealth`;
   const response = await fetch("https://api.gupshup.io/sm/api/v1/msg", {
     body: body,
     headers: {

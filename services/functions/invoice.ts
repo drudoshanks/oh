@@ -3,17 +3,20 @@ import { Kysely } from "kysely";
 import { DataApiDialect } from "kysely-data-api";
 
 interface Database {
-  invoiceMaster: {
+  invoiceInfo: {
     invoice_id: number;
     prid: number;
     sid: number;
   };
-  patientMaster: {
+  patientInfo: {
     patient_id: number;
+  };
+  parentOrgInfo: {
+    contact_id: number;
   };
   paymentRequest: {
     prid: number;
-  }
+  };
 }
 
 const db = new Kysely<Database>({
@@ -31,7 +34,7 @@ const db = new Kysely<Database>({
 export async function handler(event: any) {
   let invoiceId = parseInt(event.pathParameters.id)  
   const record = await db
-    .selectFrom("invoiceMaster")
+    .selectFrom("invoiceInfo")
     .selectAll()
     .where('invoice_id', '=', invoiceId)
     .executeTakeFirst();
