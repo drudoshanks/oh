@@ -18,6 +18,9 @@ interface Database {
   paymentRequest: {
     prid: number;
   };
+  paymentNotifications: {
+    nid: number
+  }
 }
 
 const db = new Kysely<Database>({
@@ -39,25 +42,29 @@ export async function handler(event: any) {
     .selectAll()
     .where("patient_id", "=", parseInt(patientId))
     .executeTakeFirst();
-  const link = `www.abc.com?paymentId=${paymentId}&patientId=${patientId}&invoiceId=${invoiceId}.`
-  const body = `channel=whatsapp&source=917834811114&destination=${record?.phone}&message={"type":"text","text":"Your Payment is pending. Please complete it by clicking on ${link}"}&src.name=onehealth`;
-  const response = await fetch("https://api.gupshup.io/sm/api/v1/msg", {
-    body: body,
-    headers: {
-      Apikey: "9hmhoduaupwhqpc2tt8nntdkjqqd1i70",
-      "Cache-Control": "no-cache",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  });
-
-  const results = await response.json();
-
+    const link = `www.abc.com?paymentId=${paymentId}&patientId=${patientId}&invoiceId=${invoiceId}.`
+    const body = `channel=whatsapp&source=917834811114&destination=${record?.phone}&message={"type":"text","text":"Your Payment is pending. Please complete it by clicking on ${link}"}&src.name=onehealth`;
+    const response = await fetch("https://api.gupshup.io/sm/api/v1/msg", {
+      body: body,
+      headers: {
+        Apikey: "9hmhoduaupwhqpc2tt8nntdkjqqd1i70",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+    
+    const results = await response.json();
+    console.log(results);
+    const {nid} = await db.insertInto('paymentNotifications').values({ nid: 1,  prid: parseInt(paymentId), pnsms: true,  pnwhatsapp: false, pnemail: false, pnDateTime: Date(), status: true }).returning('nid')
+    .executeTakeFirstOrThrow()
+    console.log(nid);
+    
   return {
     statusCode: 200,
     body: JSON.stringify({
       status: "success",
-      data: results,
+      data: nid,
       link: link
     }),
   };
