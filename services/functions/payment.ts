@@ -13,7 +13,7 @@ interface Database {
   };
   paymentRequest: {
     prid: number;
-  }
+  };
 }
 
 const db = new Kysely<Database>({
@@ -29,11 +29,11 @@ const db = new Kysely<Database>({
 });
 
 export async function handler(event: any) {
-  let paymentId = parseInt(event.pathParameters.id)
+  let paymentId = parseInt(event.pathParameters.id);
   const record = await db
     .selectFrom("paymentRequest")
     .selectAll()
-    .where('prid', '=', paymentId)
+    .where("prid", "=", paymentId)
     .executeTakeFirst();
   console.log(record);
 
@@ -41,7 +41,24 @@ export async function handler(event: any) {
     statusCode: 200,
     body: JSON.stringify({
       data: record,
-      "status": "success"
+      status: "success",
+    }),
+  };
+}
+
+export async function create(event: any) {
+  const payload = JSON.parse(event.body)
+  const { prid } = await db
+    .insertInto("paymentRequest")
+    .values(payload)
+    .returning("prid")
+    .executeTakeFirstOrThrow();
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      data: prid,
+      status: "success",
     }),
   };
 }

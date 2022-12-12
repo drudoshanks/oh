@@ -24,8 +24,11 @@ export function MyStack({ stack }: StackContext) {
     },
     routes: {
       "GET /invoice/{id}": "functions/invoice.handler",
+      "POST /invoice": "functions/invoice.create",
       "GET /patient/{id}": "functions/patient.handler",
+      "POST /patient": "functions/patient.create",
       "GET /payment/{id}": "functions/payment.handler",
+      "POST /payment": "functions/payment.create",
       "GET /notification": "functions/notification.handler",
     },
   });

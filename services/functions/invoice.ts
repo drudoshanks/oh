@@ -48,3 +48,20 @@ export async function handler(event: any) {
     }),
   };
 }
+
+export async function create(event: any) {
+  const payload = JSON.parse(event.body)
+  const { invoice_id } = await db
+    .insertInto("invoiceInfo")
+    .values(payload)
+    .returning("invoice_id")
+    .executeTakeFirstOrThrow();
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      data: invoice_id,
+      status: "success",
+    }),
+  };
+}

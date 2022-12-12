@@ -49,3 +49,21 @@ export async function handler(event: any) {
   };
 }
 
+
+
+export async function create(event: any) {
+  const payload = JSON.parse(event.body)
+  const { patient_id } = await db
+    .insertInto("patientInfo")
+    .values(payload)
+    .returning("patient_id")
+    .executeTakeFirstOrThrow();
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      data: patient_id,
+      status: "success",
+    }),
+  };
+}
