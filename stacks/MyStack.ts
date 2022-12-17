@@ -29,6 +29,8 @@ export function MyStack({ stack }: StackContext) {
       "POST /patient": "functions/patient.create",
       "GET /payment/{id}": "functions/payment.handler",
       "POST /payment": "functions/payment.create",
+      "GET /transactions/{id}": "functions/transactions.handler",
+      "POST /transactions": "functions/transactions.create",
       "GET /notification": "functions/notification.handler",
     },
   });
