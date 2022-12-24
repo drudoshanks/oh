@@ -8,6 +8,18 @@ interface Database {
     prid: number;
     sid: number;
   };
+  invoiceTaxTransaction: {
+    invoice_id: number;
+    invoice_tax_id: number;
+  };
+  invoiceDiscountTransaction: {
+    invoice_id: number;
+    invoice_discount_id: number;
+  };
+  invoiceLineTransaction: {
+    invoice_id: number;
+    invoice_transaction_id: number;
+  };
   patientInfo: {
     patient_id: number;
   };
@@ -32,35 +44,79 @@ const db = new Kysely<Database>({
 });
 
 export async function handler(event: any) {
-  let invoiceId = parseInt(event.pathParameters.id)  
-  const record = await db
+  let invoiceId = parseInt(event.pathParameters.id);
+  const invoiceInfo = await db
     .selectFrom("invoiceInfo")
     .selectAll()
-    .where('invoice_id', '=', invoiceId)
+    .where("invoice_id", "=", invoiceId)
     .executeTakeFirst();
-  console.log(record);
 
+  const invoiceTaxTransaction = await db
+    .selectFrom("invoiceTaxTransaction")
+    .selectAll()
+    .where("invoice_id", "=", invoiceId)
+    .executeTakeFirst();
+  const invoiceDiscountTransaction = await db
+    .selectFrom("invoiceDiscountTransaction")
+    .selectAll()
+    .where("invoice_id", "=", invoiceId)
+    .executeTakeFirst();
+  const invoiceLineTransaction = await db
+    .selectFrom("invoiceLineTransaction")
+    .selectAll()
+    .where("invoice_id", "=", invoiceId)
+    .execute();
   return {
     statusCode: 200,
     body: JSON.stringify({
-      data: record,
-      "status": "success"
+      data: {
+        invoiceInfo,
+        invoiceTaxTransaction,
+        invoiceDiscountTransaction,
+        invoiceLineTransaction,
+      },
+      status: "success",
     }),
   };
 }
 
 export async function create(event: any) {
-  const payload = JSON.parse(event.body)
+  const {
+    invoiceInfo,
+    invoiceTaxTransaction,
+    invoiceDiscountTransaction,
+    invoiceLineTransaction,
+  } = JSON.parse(event.body);
   const { invoice_id } = await db
     .insertInto("invoiceInfo")
-    .values(payload)
+    .values(invoiceInfo)
     .returning("invoice_id")
+    .executeTakeFirstOrThrow();
+  const { invoice_tax_id } = await db
+    .insertInto("invoiceTaxTransaction")
+    .values(invoiceTaxTransaction)
+    .returning("invoice_tax_id")
+    .executeTakeFirstOrThrow();
+  const { invoice_discount_id } = await db
+    .insertInto("invoiceDiscountTransaction")
+    .values(invoiceDiscountTransaction)
+    .returning("invoice_discount_id")
+    .executeTakeFirstOrThrow();
+  const { invoice_transaction_id } = await db
+    .insertInto("invoiceLineTransaction")
+    .values(invoiceLineTransaction)
+    .returning("invoice_transaction_id")
     .executeTakeFirstOrThrow();
 
   return {
     statusCode: 200,
     body: JSON.stringify({
-      data: invoice_id,
+      data: {
+        invoice_id,
+        invoice_tax_id,
+        invoice_discount_id,
+        invoice_transaction_id,
+      },
       status: "success",
     }),
   };
